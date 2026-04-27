@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome | ShopFlow</title>
+    <style>
+        :root {
+            --bg: #f6f8fc;
+            --panel: #ffffff;
+            --ink: #122033;
+            --muted: #5d6b82;
+            --line: #dce3ef;
+            --brand: #0ea5a4;
+            --brand-dark: #0a7d7d;
+            --danger-bg: #fef2f2;
+            --danger-ink: #b91c1c;
+            --ok-bg: #ecfdf5;
+            --ok-ink: #166534;
+            --info-bg: #eff6ff;
+            --info-ink: #1d4ed8;
+            --radius: 16px;
+            --shadow: 0 20px 40px rgba(15, 23, 42, 0.08);
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            font-family: "Segoe UI", "Trebuchet MS", sans-serif;
+            color: var(--ink);
+            min-height: 100vh;
+            background:
+                radial-gradient(circle at 12% 8%, #d2f5f3 0%, transparent 38%),
+                radial-gradient(circle at 88% 6%, #ffe7bd 0%, transparent 32%),
+                var(--bg);
+            display: grid;
+            place-items: center;
+            padding: 20px;
+        }
+
+        .shell {
+            width: min(1050px, 100%);
+            display: grid;
+            grid-template-columns: 1.1fr 1fr;
+            gap: 18px;
+        }
+
+        .panel {
+            background: var(--panel);
+            border: 1px solid var(--line);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 24px;
+        }
+
+        .hero {
+            background: linear-gradient(130deg, #0f1729, #183153);
+            color: #fff;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::after {
+            content: "";
+            position: absolute;
+            width: 260px;
+            height: 260px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            right: -70px;
+            top: -70px;
+        }
+
+        .hero h1 { margin: 0 0 12px; font-size: clamp(1.6rem, 3.8vw, 2.1rem); }
+        .hero p { margin: 0; color: #d9e6ff; line-height: 1.7; }
+
+        .hero ul {
+            margin: 18px 0 0;
+            padding: 0;
+            list-style: none;
+            display: grid;
+            gap: 8px;
+            color: #d9e6ff;
+            font-size: 0.95rem;
+        }
+
+        h2 {
+            margin: 0 0 8px;
+            font-size: 1.25rem;
+        }
+
+        .muted { margin: 0 0 14px; color: var(--muted); }
+
+        .messages {
+            margin-bottom: 14px;
+            display: grid;
+            gap: 8px;
+        }
+
+        .msg {
+            border-radius: 10px;
+            padding: 9px 12px;
+            font-size: 0.9rem;
+            border: 1px solid transparent;
+        }
+
+        .msg.error { background: var(--danger-bg); color: var(--danger-ink); border-color: #fecaca; }
+        .msg.success { background: var(--ok-bg); color: var(--ok-ink); border-color: #bbf7d0; }
+        .msg.info { background: var(--info-bg); color: var(--info-ink); border-color: #bfdbfe; }
+
+        .forms {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .card {
+            border: 1px solid var(--line);
+            border-radius: 12px;
+            padding: 14px;
+            background: #fff;
+        }
+
+        label {
+            display: block;
+            margin: 10px 0 6px;
+            font-size: 0.88rem;
+            font-weight: 700;
+        }
+
+        input {
+            width: 100%;
+            border: 1px solid var(--line);
+            border-radius: 10px;
+            padding: 10px;
+            font-size: 0.92rem;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--brand);
+            box-shadow: 0 0 0 3px rgba(14, 165, 164, 0.16);
+        }
+
+        .btn {
+            width: 100%;
+            margin-top: 12px;
+            border: none;
+            border-radius: 10px;
+            padding: 10px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .btn-primary { background: var(--brand); color: #fff; }
+        .btn-primary:hover { background: var(--brand-dark); }
+        .btn-outline { background: #fff; color: var(--ink); border: 1px solid var(--line); }
+
+        @media (max-width: 900px) {
+            .shell { grid-template-columns: 1fr; }
+        }
+
+        @media (max-width: 700px) {
+            .forms { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <main class="shell">
+        <section class="panel hero">
+            <h1>ShopFlow Authentication</h1>
+            <p>Login is now your landing page. Create an account, sign in, and access your dashboard and store securely.</p>
+            <ul>
+                <li>Secure sign-in with Django authentication</li>
+                <li>Registration with password confirmation</li>
+                <li>Protected dashboard and ecommerce pages</li>
+            </ul>
+        </section>
+
+        <section class="panel">
+            <h2>Welcome Back</h2>
+            <p class="muted">Sign in or register to continue.</p>
+
+            {% if messages %}
+            <div class="messages">
+                {% for message in messages %}
+                <div class="msg {{ message.tags|default:'info' }}">{{ message }}</div>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            <div class="forms">
+                <article class="card">
+                    <h3>Login</h3>
+                    <form action="{% url 'login' %}" method="post">
+                        {% csrf_token %}
+                        <label for="login-username">Username</label>
+                        <input id="login-username" type="text" name="username" required>
+
+                        <label for="login-password">Password</label>
+                        <input id="login-password" type="password" name="password" required>
+
+                        <button class="btn btn-primary" type="submit">Login</button>
+                    </form>
+                </article>
+
+                <article class="card">
+                    <h3>Register</h3>
+                    <form action="{% url 'signup' %}" method="post">
+                        {% csrf_token %}
+                        <label for="signup-username">Username</label>
+                        <input id="signup-username" type="text" name="username" required>
+
+                        <label for="signup-email">Email</label>
+                        <input id="signup-email" type="email" name="email" required>
+
+                        <label for="signup-password">Password</label>
+                        <input id="signup-password" type="password" name="password" required>
+
+                        <label for="signup-confirm">Confirm Password</label>
+                        <input id="signup-confirm" type="password" name="confirm_password" required>
+
+                        <button class="btn btn-outline" type="submit">Create Account</button>
+                    </form>
+                </article>
+            </div>
+        </section>
+    </main>
+</body>
+</html>

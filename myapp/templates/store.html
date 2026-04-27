@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ShopFlow Store</title>
+  <style>
+    :root {
+      --bg: #0a0f1a;
+      --panel: #121b2e;
+      --panel-2: #1a2740;
+      --ink: #f8fafc;
+      --muted: #b4c2d9;
+      --brand: #38bdf8;
+      --sale: #f97316;
+      --success: #22c55e;
+      --line: rgba(180, 194, 217, 0.18);
+      --radius: 16px;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: "Segoe UI", "Trebuchet MS", sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 10% 15%, #1e293b 0%, transparent 35%),
+        radial-gradient(circle at 90% 20%, #334155 0%, transparent 30%),
+        var(--bg);
+    }
+
+    .container {
+      width: min(1150px, 92vw);
+      margin: 0 auto;
+    }
+
+    .topbar {
+      border-bottom: 1px solid var(--line);
+      background: rgba(10, 15, 26, 0.88);
+      backdrop-filter: blur(10px);
+      position: sticky;
+      top: 0;
+      z-index: 20;
+    }
+
+    .topbar-inner {
+      padding: 14px 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand {
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-weight: 900;
+    }
+
+    .menu {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      border: 1px solid var(--line);
+      color: var(--ink);
+      text-decoration: none;
+      border-radius: 999px;
+      padding: 8px 14px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      transition: 0.25s ease;
+    }
+
+    .btn:hover { border-color: var(--brand); color: var(--brand); }
+
+    .hero {
+      margin: 24px 0;
+      border-radius: 22px;
+      background:
+        linear-gradient(120deg, rgba(56, 189, 248, 0.2), rgba(249, 115, 22, 0.22)),
+        var(--panel);
+      border: 1px solid var(--line);
+      padding: 30px;
+      display: grid;
+      grid-template-columns: 1.4fr 1fr;
+      gap: 22px;
+      align-items: center;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .hero::before {
+      content: "";
+      position: absolute;
+      width: 320px;
+      height: 320px;
+      border-radius: 50%;
+      background: rgba(56, 189, 248, 0.15);
+      right: -90px;
+      top: -90px;
+    }
+
+    .hero h1 {
+      margin: 0;
+      font-size: clamp(1.6rem, 4.2vw, 2.5rem);
+      line-height: 1.1;
+    }
+
+    .hero p {
+      margin: 14px 0 20px;
+      color: var(--muted);
+      max-width: 560px;
+      line-height: 1.7;
+    }
+
+    .hero-cta {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--brand);
+      color: #0b1220;
+      text-decoration: none;
+      border-radius: 12px;
+      padding: 11px 16px;
+      font-weight: 800;
+    }
+
+    .hero-card {
+      background: rgba(11, 18, 32, 0.55);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 18px;
+    }
+
+    .hero-card h3 { margin: 0; }
+
+    .hero-list {
+      margin: 14px 0 0;
+      padding: 0;
+      list-style: none;
+      color: var(--muted);
+      display: grid;
+      gap: 8px;
+      font-size: 0.92rem;
+    }
+
+    .hero-list strong { color: #fff; }
+
+    .section-title {
+      margin: 6px 0 14px;
+      font-size: 1.25rem;
+    }
+
+    .products {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+      margin-bottom: 35px;
+    }
+
+    .product {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 16px;
+      transition: transform 0.25s ease, border-color 0.25s ease;
+      animation: fadeUp 0.6s ease both;
+    }
+
+    .product:hover {
+      transform: translateY(-4px);
+      border-color: rgba(56, 189, 248, 0.5);
+    }
+
+    .badge {
+      display: inline-block;
+      border-radius: 999px;
+      background: rgba(56, 189, 248, 0.17);
+      color: var(--brand);
+      padding: 4px 10px;
+      font-size: 0.76rem;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+
+    .category {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.82rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    .name {
+      margin: 6px 0 10px;
+      font-size: 1.08rem;
+      font-weight: 700;
+    }
+
+    .meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+    }
+
+    .price {
+      display: flex;
+      gap: 8px;
+      align-items: baseline;
+    }
+
+    .now {
+      color: #fff;
+      font-size: 1.2rem;
+      font-weight: 800;
+    }
+
+    .old {
+      color: var(--muted);
+      text-decoration: line-through;
+      font-size: 0.9rem;
+    }
+
+    .rating {
+      font-size: 0.84rem;
+      color: #facc15;
+      font-weight: 700;
+    }
+
+    .actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    .buy,
+    .cart {
+      flex: 1;
+      border-radius: 10px;
+      border: none;
+      cursor: pointer;
+      padding: 10px;
+      font-weight: 700;
+      font-size: 0.87rem;
+    }
+
+    .buy { background: var(--brand); color: #0c1321; }
+    .cart { background: transparent; color: var(--ink); border: 1px solid var(--line); }
+
+    .promo {
+      margin-bottom: 34px;
+      background: linear-gradient(130deg, rgba(249, 115, 22, 0.15), rgba(34, 197, 94, 0.14));
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 22px;
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .promo h3 {
+      margin: 0 0 6px;
+      font-size: 1.15rem;
+    }
+
+    .promo p {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .promo strong { color: var(--sale); }
+
+    .promo .code {
+      border: 1px dashed rgba(180, 194, 217, 0.4);
+      border-radius: 10px;
+      padding: 10px 14px;
+      font-weight: 800;
+      letter-spacing: 0.05em;
+      background: rgba(11, 18, 32, 0.55);
+    }
+
+    .footer {
+      border-top: 1px solid var(--line);
+      padding: 16px 0 24px;
+      color: var(--muted);
+      font-size: 0.86rem;
+      text-align: center;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 980px) {
+      .hero { grid-template-columns: 1fr; }
+      .products { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+
+    @media (max-width: 620px) {
+      .products { grid-template-columns: 1fr; }
+      .topbar-inner { flex-direction: column; align-items: flex-start; }
+      .menu { width: 100%; }
+      .menu .btn { flex: 1; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="container topbar-inner">
+      <div class="brand">ShopFlow Store</div>
+      <nav class="menu">
+        <a href="{% url 'index' %}" class="btn">Dashboard</a>
+        <a href="#products" class="btn">Products</a>
+        <a href="#promo" class="btn">Deals</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="hero">
+      <div>
+        <h1>Experience Shopping With A Premium Ecommerce UI</h1>
+        <p>
+          Clean product discovery, modern cards, strong visual contrast, and promotional sections.
+          This is a ready ecommerce page style you can build on for real products and checkout.
+        </p>
+        <a href="#products" class="hero-cta">Browse Collection</a>
+      </div>
+      <aside class="hero-card">
+        <h3>Today Highlights</h3>
+        <ul class="hero-list">
+          <li><strong>Free Delivery:</strong> Orders above $50</li>
+          <li><strong>Fast Support:</strong> 24/7 customer care</li>
+          <li><strong>Secure Checkout:</strong> Trusted payment flow</li>
+          <li><strong>Return Window:</strong> 14-day easy returns</li>
+        </ul>
+      </aside>
+    </section>
+
+    <h2 id="products" class="section-title">Featured Products</h2>
+    <section class="products">
+      {% for product in products %}
+      <article class="product">
+        <span class="badge">{{ product.badge }}</span>
+        <p class="category">{{ product.category }}</p>
+        <h3 class="name">{{ product.name }}</h3>
+        <div class="meta">
+          <div class="price">
+            <span class="now">${{ product.price }}</span>
+            <span class="old">${{ product.old_price }}</span>
+          </div>
+          <span class="rating">{{ product.rating }} ?</span>
+        </div>
+        <div class="actions">
+          <button class="buy" type="button">Buy Now</button>
+          <button class="cart" type="button">Add To Cart</button>
+        </div>
+      </article>
+      {% endfor %}
+    </section>
+
+    <section id="promo" class="promo">
+      <div>
+        <h3>Limited Weekend Sale</h3>
+        <p>Apply <strong>20% OFF</strong> on selected products before midnight.</p>
+      </div>
+      <div class="code">USE CODE: FLOW20</div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    ShopFlow storefront demo for your Django project.
+  </footer>
+</body>
+</html>

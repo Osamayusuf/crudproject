@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Update Record</title>
+  <style>
+    :root {
+      --bg: #f5f7fb;
+      --panel: #ffffff;
+      --ink: #142032;
+      --muted: #5d6b82;
+      --line: #dbe3ee;
+      --brand: #0ea5a4;
+      --brand-dark: #0b7f7e;
+      --shadow: 0 18px 36px rgba(20, 32, 50, 0.08);
+      --radius: 16px;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "Segoe UI", "Trebuchet MS", sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 10% 10%, #d2f5f3 0%, transparent 40%),
+        radial-gradient(circle at 90% 0%, #ffe7bd 0%, transparent 32%),
+        var(--bg);
+      display: grid;
+      place-items: center;
+      padding: 22px;
+    }
+
+    .panel {
+      width: min(560px, 100%);
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 26px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 1.5rem;
+    }
+
+    p { color: var(--muted); margin: 8px 0 18px; }
+
+    .links {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 10px;
+      flex-wrap: wrap;
+    }
+
+    .link {
+      text-decoration: none;
+      border: 1px solid var(--line);
+      color: var(--ink);
+      border-radius: 999px;
+      padding: 8px 14px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      background: #fff;
+    }
+
+    .link:hover { border-color: var(--brand); color: var(--brand-dark); }
+
+    label {
+      display: block;
+      margin: 12px 0 6px;
+      font-size: 0.9rem;
+      font-weight: 700;
+    }
+
+    input, select {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 11px;
+      font-size: 0.95rem;
+    }
+
+    input:focus, select:focus {
+      outline: none;
+      border-color: var(--brand);
+      box-shadow: 0 0 0 3px rgba(14, 165, 164, 0.18);
+    }
+
+    button {
+      margin-top: 18px;
+      width: 100%;
+      border: none;
+      border-radius: 12px;
+      padding: 12px;
+      font-weight: 700;
+      color: #fff;
+      background: linear-gradient(120deg, var(--brand), #22c1bf);
+      cursor: pointer;
+    }
+
+    button:hover { background: linear-gradient(120deg, var(--brand-dark), #17afad); }
+  </style>
+</head>
+<body>
+  <div class="panel">
+    <div class="links">
+      <a class="link" href="{% url 'index' %}">Back to Dashboard</a>
+      <a class="link" href="{% url 'store' %}">View Store</a>
+      <a class="link" href="{% url 'logout' %}">Logout</a>
+    </div>
+    <h1>Update Record #{{ d.id }}</h1>
+    <p>Modify details and save changes instantly.</p>
+
+    <form action="{% url 'updatedata' d.id %}" method="post">
+      {% csrf_token %}
+      <label for="name">Name</label>
+      <input id="name" type="text" name="name" value="{{ d.name }}" required>
+
+      <label for="email">Email</label>
+      <input id="email" type="email" name="email" value="{{ d.email }}" required>
+
+      <label for="age">Age</label>
+      <input id="age" type="number" name="age" value="{{ d.age }}" min="1" required>
+
+      <label for="gender">Gender</label>
+      <select id="gender" name="gender" required>
+        <option value="male" {% if d.gender|lower == 'male' %}selected{% endif %}>Male</option>
+        <option value="female" {% if d.gender|lower == 'female' %}selected{% endif %}>Female</option>
+      </select>
+
+      <button type="submit">Update Data</button>
+    </form>
+  </div>
+</body>
+</html>
